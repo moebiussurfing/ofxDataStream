@@ -1,6 +1,6 @@
 Changes in this fork from **@moebiusSurfing**  
 * Adding example  
-![Screenshot](/readme_images/Capture.png?raw=true "Capture.PNG")
+![Screenshot](/readme_images/Capture.png?raw=true "Capture.PNG")  
 Dependencies:  
 * ofxSurfingHelpers
 * ofxHistoryPlot
