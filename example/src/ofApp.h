@@ -15,6 +15,8 @@ public:
 
     ofxHistoryPlot * plot[NUM_PLOTS];
 
+    vector<ofColor> colors;
+
     void setup();
     void update();
     void draw();
@@ -32,36 +34,39 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
-    vector<ofxDataStream> specAmps;
-    vector<float> filter;
-
-    bool bTrigManual =false;
-    bool bModeNoise =false;
-
-    vector<ofColor> colors;
+    vector<ofxDataStream> outputs;
+    vector<float> inputs;
 
     ofxPanel gui;
+
     void Changed_params(ofAbstractParameter &e);
+
     ofParameterGroup params;
     ofParameter<bool> enable;
     ofParameter<bool> solo;
+    ofParameter<int> index;
     ofParameter<bool> bClamp;
-    ofParameter<float> input;
     ofParameter<float> minInput;
     ofParameter<float> maxInput;
+    ofParameter<bool> bNormalized;
     ofParameter<float> minOutput;
     ofParameter<float> maxOutput;
     ofParameter<bool> enableSmooth;
     ofParameter<float> smoothVal;
-    ofParameter<float> output;
-    ofParameter<bool> bReset;
     ofParameter<float> threshold;
+    ofParameter<float> onsetGrow;
+    ofParameter<float> onsetDecay;
     ofParameter<float> slideMin;
     ofParameter<float> slideMax;
+    ofParameter<float> input;
+    ofParameter<float> output;
+    ofParameter<bool> bReset;
 
     void doReset();
     void setupParams();
 
-    ofColor cbg;
+    bool bTrigManual =false;//flip first
+    bool bModeNoise =false;//fast generators
 
+    ofColor cbg;
 };
