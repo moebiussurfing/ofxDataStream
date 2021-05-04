@@ -2,9 +2,9 @@ Changes in this fork from **@moebiusSurfing**
 
 Dependencies:  
 * ofxSurfingHelpers
-* ofxHistoryPlot  
+* ofxHistoryPlot
 
-* Added example  
+**Added example**:  
 ![Screenshot](/readme_images/Capture.png?raw=true "Capture.PNG")  
 
 ---------------------------
