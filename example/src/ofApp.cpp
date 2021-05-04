@@ -51,14 +51,14 @@ void ofApp::setup(){
     for(int i = 0 ; i < NUM_PLOTS; i++){
         //        float percent = i / (float)(NUM_PLOTS - 1) ;
 
-        plot[i] = new ofxHistoryPlot(NULL,"input", 200, false);
+        string _name;
+        if (i%2==0) _name = "Input"+ ofToString(i/2);
+        else _name = "Output"+ ofToString(i/2);
+
+        plot[i] = new ofxHistoryPlot(NULL,_name, 200, false);
         plot[i]->setRange(-0.2, 1.2);
 
-        //        plot[i]->setColor(ofColor(ofRandom(64,255), ofRandom(64,255), ofRandom(64,255) ));
-
         plot[i]->setColor(colors[i]);
-        //        plot[i]->setColor();
-
         //        plot[i]->setGridUnit(10);
         plot[i]->setShowNumericalInfo(true);
 
