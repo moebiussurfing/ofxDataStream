@@ -1,0 +1,19 @@
+
+example/bin/data/.gitkeep
+example/bin/exampleDebug.app/Contents/Frameworks/libfmodex.dylib
+example/bin/exampleDebug.app/Contents/Info.plist
+example/bin/exampleDebug.app/Contents/MacOS/exampleDebug
+example/bin/exampleDebug.app/Contents/PkgInfo
+example/bin/exampleDebug.app/Contents/Resources/icon-debug.icns
+example/config.make
+example/example.xcodeproj/project.pbxproj
+example/example.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+example/example.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+example/example.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+example/example.xcodeproj/project.xcworkspace/xcuserdata/manumolina.xcuserdatad/UserInterfaceState.xcuserstate
+example/example.xcodeproj/xcshareddata/xcschemes/example Debug.xcscheme
+example/example.xcodeproj/xcshareddata/xcschemes/example Release.xcscheme
+example/openFrameworks-Info.plist
+example/Makefile
+example/Project.xcconfig
+example/.DS_Store

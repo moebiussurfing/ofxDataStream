@@ -1,0 +1,4 @@
+ofxDataStream
+ofxGui
+ofxHistoryPlot
+ofxSurfingHelpers
