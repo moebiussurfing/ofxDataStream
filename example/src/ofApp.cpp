@@ -129,17 +129,15 @@ void ofApp::update(){
         //        filter[i] = ofNoise(t*i/NUM_PLOTS);
 
         plot[2*i]->update(filter[i]);//source
-        plot[2*i+1]->update(specAmps[i].getValue());//filtered
 
+        if (enable) plot[2*i+1]->update(specAmps[i].getValue());//filtered
+        else plot[2*i+1]->update(filter[i]);//source
     }
 
-
     //    update with incoming values:
-
     //    amp.update(rawAmplitude, 0); // raw value, index (optional)
     //    specAmps.update(spectralAmplitudes); // or update with a const vector ref
     //    amp.incrUpdate(rawAmplitudeDiff); //increment current value and update
-
 
     for(int i = 0 ; i < NUM_VARS; i++){
         if ( i!=0)continue;
@@ -161,7 +159,6 @@ void ofApp::update(){
             " " << specAmps[i].getDirectionValDiff();
         }
     }
-
 
     // if the direction has changed and
     // if the time of change is greater than 0.5 sec
@@ -190,8 +187,6 @@ void ofApp::draw(){
         y += h;
 
     }
-
-
 
 
     //    get a smoothed value (update updating):
@@ -303,8 +298,7 @@ void ofApp::setupParams() {
 
     params.setName(name);
     params.add(enable.set("enable", true));
-    params.add(solo.set("solo", false));
-    params.add(bReset.set("bReset", false));
+//    params.add(solo.set("solo", false));
 
     //params.add(input.set("INPUT", 0, inputMinRange, inputMaxRange));
     //params.add(minInput.set("MIN IN", 0, inputMinRange, inputMaxRange));
@@ -312,14 +306,18 @@ void ofApp::setupParams() {
 
     params.add(minOutput.set("minOutput", 0, outMinRange, outMaxRange));
     params.add(maxOutput.set("maxOutput", 1, outMinRange, outMaxRange));
-    params.add(output.set("output", 0, outMinRange, outMaxRange));
+//    params.add(output.set("output", 0, outMinRange, outMaxRange));
 
-    params.add(enableSmooth.set("smooth enable", false));
+//    params.add(enableSmooth.set("smooth enable", false));
     params.add(smoothVal.set("smooth power", 0.25, 0.0, 1));
-    params.add(threshold.set("threshold", 0.5, 0.0, 1));
-    params.add(slideMin.set("slideMin", 0.2, 0.0, 1));
-    params.add(slideMax.set("slideMax", 0.8, 0.0, 1));
+    params.add(slideMin.set("slideIn", 0.2, 0.0, 1));
+    params.add(slideMax.set("slideOut", 0.2, 0.0, 1));
     //params.add(bClamp.set("CLAMP", true));
+
+    params.add(threshold.set("threshold", 0.5, 0.0, 1));
+
+    params.add(bReset.set("bReset", false));
+
 
     //exclude
     input.setSerializable(false);
@@ -344,7 +342,7 @@ void ofApp::doReset() {
     minOutput = 0;
     maxOutput = 1;
     slideMin = 0.2;
-    slideMax = 0.8;
+    slideMax = 0.2;
 
     enableSmooth = false;
     smoothVal = 0.25;
