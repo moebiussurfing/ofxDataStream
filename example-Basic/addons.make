@@ -1,5 +1,0 @@
-ofxDataStream
-ofxHistoryPlot
-ofxImGui
-ofxScaleDragRect
-ofxSurfingHelpers
