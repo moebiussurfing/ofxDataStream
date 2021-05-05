@@ -1,4 +1,5 @@
 ofxDataStream
 ofxGui
 ofxHistoryPlot
+ofxImGui
 ofxSurfingHelpers

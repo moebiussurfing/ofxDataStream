@@ -4,7 +4,9 @@
 #include "ofxDataStream.h"
 #include "ofxSurfing_Timers.h"
 #include "ofxHistoryPlot.h"
-#include "ofxGui.h"
+//#include "ofxGui.h"
+#include "ofxImGui.h"
+#include "ofxSurfing_ImGui.h"
 
 #define NUM_VARS 5
 #define NUM_PLOTS 10
@@ -37,7 +39,7 @@ public:
     vector<ofxDataStream> outputs;
     vector<float> inputs;
 
-    ofxPanel gui;
+    //ofxPanel gui;
 
     void Changed_params(ofAbstractParameter &e);
 
@@ -68,5 +70,15 @@ public:
     bool bTrigManual =false;//flip first
     bool bModeNoise =false;//fast generators
 
-    ofColor cbg;
+    ofColor colorBg;
+
+	void setup_ImGui();
+	void draw_ImGui();
+	ofxImGui::Gui gui;
+	ofxImGui::Settings mainSettings = ofxImGui::Settings();
+	ImFont* customFont = nullptr;
+	ofParameter<bool> bGui{ "Show Gui", true };
+	ofParameter<bool> auto_resize{ "Auto Resize", true};
+	ofParameter<bool> bLockMouseByImGui{ "Mouse Locked", false };
+	ofParameter<bool> auto_lockToBorder{ "Lock GUI", false };
 };

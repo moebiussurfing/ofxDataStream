@@ -257,7 +257,7 @@ void ofxDataStream::update(float _val, int _idx) {
 float ofxDataStream::smooth(int _idx, float _val) {
     if (_idx < 0 || _idx >= streamSize) {
         ofLogError("ofxDataStream") << "smooth(): index doesn't exist";
-        return;
+        return -1;
     }
 
     float smoothedValue = 0.0;
