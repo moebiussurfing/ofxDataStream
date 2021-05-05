@@ -6,7 +6,10 @@
 #include "ofxHistoryPlot.h"
 //#include "ofxGui.h"
 #include "ofxImGui.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 #include "ofxSurfing_ImGui.h"
+#include "ofxInteractiveRect.h"
 
 #define NUM_VARS 5
 #define NUM_PLOTS 10
@@ -14,12 +17,17 @@
 class ofApp : public ofBaseApp{
 
 public:
+	ofxInteractiveRect rectangle_Plots = { "Rect_Plots" };
 
     ofxHistoryPlot * plot[NUM_PLOTS];
 
     vector<ofColor> colors;
 
     void setup();
+    
+	void setupPlots();
+	void drawPlots(ofRectangle r);
+
     void update();
     void draw();
     void exit();
@@ -47,6 +55,8 @@ public:
     ofParameter<bool> enable;
     ofParameter<bool> solo;
     ofParameter<int> index;
+    ofParameter<int> type;
+    ofParameter<string> type_Str;
     ofParameter<bool> bClamp;
     ofParameter<float> minInput;
     ofParameter<float> maxInput;
@@ -81,4 +91,19 @@ public:
 	ofParameter<bool> auto_resize{ "Auto Resize", true};
 	ofParameter<bool> bLockMouseByImGui{ "Mouse Locked", false };
 	ofParameter<bool> auto_lockToBorder{ "Lock GUI", false };
+
+
+	//enum Smoothing_t {
+	//	SMOOTHING_NONE,
+	//	SMOOTHING_ACCUM,
+	//	SMOOTHING_SLIDE
+	//} smoothingType;
+
+	//enum Mean_t {
+	//	MEAN_ARITH,
+	//	MEAN_GEOM,
+	//	MEAN_HARM,
+	//} meanType;
+
+	std::vector<std::string> typeLabels;
 };
