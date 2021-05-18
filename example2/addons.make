@@ -1,0 +1,9 @@
+ofxGui
+ofxDataStream
+ofxHistoryPlot
+ofxImGui
+ofxMidi
+ofxMidiParams
+ofxScaleDragRect
+ofxSurfingHelpers
+ofxWindowApp

@@ -487,11 +487,3 @@ void ofxDataStream::reset(int _idx) {
         directionChangeVals[i] = 0;
     }
 }
-
-
-
-
-
-
-
-

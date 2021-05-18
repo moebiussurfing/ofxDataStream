@@ -2,12 +2,13 @@
 
 #include "ofMain.h"
 #include "ofxDataStream.h"
-#include "ofxSurfing_Timers.h"
 #include "ofxHistoryPlot.h"
-//#include "ofxGui.h"
 #include "ofxImGui.h"
 #include "imgui.h"
+//#include "ofxGui.h"
 #include "imgui_internal.h"
+#include "ofxSurfingHelpers.h"
+#include "ofxSurfing_Timers.h"
 #include "ofxSurfing_ImGui.h"
 #include "ofxInteractiveRect.h"
 
@@ -17,6 +18,45 @@
 class DataStreamGroup : public ofBaseApp{
 
 public:
+private:
+	enum ParamType {
+		PTYPE_FLOAT = 0,
+		PTYPE_INT,
+		PTYPE_BOOL,
+		PTYPE_UNKNOWN
+	};
+
+private:
+	class MidiParamAssoc {
+	public:
+		//int midiId = -1;
+		int paramIndex = 0;
+		ParamType ptype = PTYPE_UNKNOWN;
+		//ofRectangle drawRect;
+		string displayMidiName = "";
+		//bool bListening = false;
+		//bool bNeedsTextPrompt = false;
+		string xmlParentName = "";
+		string xmlName = "";
+	}; 
+	
+	ofParameterGroup mParamsGroup;
+	vector< shared_ptr<MidiParamAssoc> > mAssocParams;
+	void Changed_Controls_Out(ofAbstractParameter &e);
+
+public:
+	void addGroup(ofParameterGroup aparams);
+	void add(ofParameterGroup aparams);
+	void add(ofParameter<float>& aparam);
+	void add(ofParameter<bool>& aparam);
+	void add(ofParameter<int>& aparam);
+	void addParam(ofAbstractParameter& aparam);
+
+	//----
+
+public:
+	string path_Settings = "DataStreamGroup.xml";
+
 	ofxInteractiveRect rectangle_Plots = { "Rect_Plots" };
 
     ofxHistoryPlot * plot[NUM_PLOTS];
@@ -29,6 +69,11 @@ public:
 	void drawPlots(ofRectangle r);
 
     void update();
+    
+	void updateGenerators();
+    void updateSmooths();
+    void updatePlots();
+
     void draw();
     void exit();
 
@@ -53,6 +98,7 @@ public:
 
     ofParameterGroup params;
     ofParameter<bool> enable;
+    ofParameter<bool> bShowPlots;
     ofParameter<bool> solo;
     ofParameter<int> index;
     ofParameter<int> typeSmooth;

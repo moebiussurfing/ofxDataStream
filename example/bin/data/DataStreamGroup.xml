@@ -1,0 +1,20 @@
+{
+    "filter": {
+        "bNormalized": "0",
+        "enable": "1",
+        "index": "2",
+        "maxInput": "1",
+        "maxOutput": "1",
+        "minInput": "0",
+        "minOutput": "0",
+        "onsetDecay": "0.1",
+        "onsetGrow": "0.1",
+        "slideIn": "0.2",
+        "slideOut": "0.2",
+        "smooth": "1",
+        "smooth_power": "0.74",
+        "threshold": "0.727",
+        "typeMean": "0",
+        "typeSmooth": "1"
+    }
+}

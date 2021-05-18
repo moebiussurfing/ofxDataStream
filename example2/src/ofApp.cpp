@@ -2,27 +2,44 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	dataGroup.setup();
+	//windowApp.setup();
+
+	params.setName("ParamsGroup");//group 
+	params.add(lineWidth.set("lineWidth", 1, 0.1, 10));
+	params.add(shapeType.set("shapeType", 1, 1, 5));
+	params.add(size.set("size", 100, 5, 200));
+	params.add(amount.set("amount", 10, 1, 24));
+	params.add(separation.set("separation", 10, 1, 100));
+
+	dataStreamGroup.setup();
+	dataStreamGroup.addGroup(params);
+
+	mMidiParams.connect(1, true);
+	mMidiParams.add(params);
+	mMidiParams.setPosition(ofGetWidth() - 320, 20);
+	mMidiParams.load("example-midi-params.xml");
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	dataGroup.update();
+	dataStreamGroup.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	dataGroup.draw();
+	dataStreamGroup.draw();
+	mMidiParams.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::exit(){
-	dataGroup.exit();
+	dataStreamGroup.exit();
+	//mMidiParams.exit();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	dataGroup.keyPressed(key);
+	dataStreamGroup.keyPressed(key);
 }
 
 //--------------------------------------------------------------

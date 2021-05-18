@@ -2,6 +2,8 @@
 #include "ofMain.h"
 
 #include "DataStreamGroup.h"
+#include "ofxWindowApp.h"
+#include "ofxMidiParams.h"
 
 class ofApp : public ofBaseApp{
 
@@ -23,6 +25,15 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		DataStreamGroup dataGroup;
+		DataStreamGroup dataStreamGroup;
 
+		ofParameterGroup params;
+		ofParameter<float> lineWidth;
+		ofParameter<int> shapeType;
+		ofParameter<int> amount;
+		ofParameter<int> separation;
+		ofParameter<int> size;
+		ofxMidiParams mMidiParams;
+
+		ofxWindowApp windowApp;
 };
