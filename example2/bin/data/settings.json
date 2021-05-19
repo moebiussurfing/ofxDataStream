@@ -1,5 +1,5 @@
 {
-    "ofApp": {
+    "App": {
         "SHOW_DATA_STREAM": "1",
         "SHOW_DEBUG": "1",
         "SHOW_MIDI_PARAMS": "1"

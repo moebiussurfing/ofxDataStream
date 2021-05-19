@@ -24,9 +24,9 @@ TODO:
 #include "ofxInteractiveRect.h"
 //#include "ofxGui.h"
 
-#define NUM_VARS 5
 #define NUM_GENERATORS 5
-#define NUM_PLOTS 10
+//#define NUM_VARS 5
+//#define NUM_PLOTS 10
 
 class DataStreamGroup : public ofBaseApp{
 
@@ -83,8 +83,12 @@ public:
 	string path_Settings = "DataStreamGroup.xml";
 
 	ofxInteractiveRect rectangle_Plots = { "Rect_Plots" };
+	
+int NUM_PLOTS;
+int NUM_VARS;
 
-    ofxHistoryPlot * plot[NUM_PLOTS];
+    //ofxHistoryPlot * plot[NUM_PLOTS];
+	vector<ofxHistoryPlot *> plot;
 
     vector<ofColor> colors;
 
@@ -146,7 +150,7 @@ public:
     ofParameter<float> onsetDecay;
     ofParameter<float> slideMin;
     ofParameter<float> slideMax;
-    ofParameter<float> input;
+    ofParameter<float> input;//index selected
     ofParameter<float> output;
     ofParameter<bool> bReset;
 

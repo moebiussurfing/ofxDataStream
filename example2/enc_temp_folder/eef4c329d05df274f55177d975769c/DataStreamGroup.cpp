@@ -16,6 +16,110 @@ void DataStreamGroup::doRandomize() {
 	}
 }
 
+////--------------------------------------------------------------
+//void DataStreamGroup::drawPlots(ofRectangle r) {
+//
+//	ofPushStyle();
+//
+//	int hh = r.getHeight();
+//	int ww = r.getWidth();
+//	int x = r.getX();
+//	int y = r.getY();
+//
+//	ofColor colorBaseLine = ofColor(255, 48);
+//
+//	//ofPushMatrix();
+//	//ofTranslate(x,y)
+//
+//	int h;
+//	if (solo) 
+//	{
+//		h = hh / 2;//full height on solo
+//		y = y - (hh * index);
+//	}
+//	else 
+//	{
+//		h = hh / NUM_PLOTS;
+//	}
+//
+//	for (int i = 0; i < NUM_PLOTS; i++)
+//	{
+//		int ii = i / 2;
+//
+//		//TODO: draw only soloed
+//		if (solo && (ii != index)) { y += h; continue; }
+//
+//		plot[i]->draw(x, y, ww, h);
+//
+//		ofColor _c1 = ofColor(colors[i]);
+//		ofColor _c2 = ofColor(colors[i]);
+//		float _a1 = ofxSurfingHelpers::Bounce(1.0);
+//		float _a2 = ofxSurfingHelpers::Bounce(0.5);
+//
+//		// draw threshold
+//		if (i % 2 != 0)
+//		{
+//			ofColor c;
+//			if (outputs[ii].getBonk()) c.set(ofColor(_c2, 125 * _a1));
+//			else if (outputs[ii].getTrigger()) c.set(ofColor(_c2, 128 * _a2));
+//			else c.set(ofColor(_c2, 48));
+//			ofSetColor(c);
+//			float yth = y + (1 - threshold)*h;
+//			ofLine(x, yth, x + ww, yth);
+//		}
+//
+//		//mark selected
+//		if (i == index * 2 || i == index * 2 + 1)
+//		{
+//			ofSetLineWidth(1);
+//			ofSetColor(255, 100);
+//			ofLine(x, y, x, y + h);
+//		}
+//
+//		//if (i % 2 == 0) y += h;//overlap
+//		y += h;//separated
+//	}
+//
+//	// extra
+//	x = r.getX();
+//	y = r.getY();
+//	for (int i = 0; i < NUM_PLOTS; i++)
+//	{
+//		int ii = i / 2;
+//		//TODO:
+//		if (solo && (ii != index)) { y += h; continue; }
+//
+//		//baseline
+//		ofSetColor(colorBaseLine);
+//		ofSetLineWidth(1);
+//		ofLine(x, y + h, x + ww, y + h);
+//
+//		//name
+//		ofSetColor(255, 32);
+//		ofDrawBitmapString(/*"name: " + */ofToString(i), x + 5, y + 11);
+//
+//		y += h;
+//		//if (i % 2 == 0) y += h;//overlap
+//	}
+//
+//	//--
+//
+//	//if (solo) {
+//	//	h = hh / 2;//full height on solo
+//	//	//y = y - (hh * index);
+//
+//	//	//baseline
+//	//	ofSetColor(colorBaseLine);
+//	//	ofSetLineWidth(1);
+//	//	ofLine(x, y + h, x + ww, y + h);
+//	//	ofLine(x, y + 2 * h, x + ww, y + 2 * h);
+//	//}
+//
+//	//ofPopMatrix();
+//	ofPopStyle();
+//}
+
+//overlap input and output
 //--------------------------------------------------------------
 void DataStreamGroup::drawPlots(ofRectangle r) {
 
@@ -39,6 +143,7 @@ void DataStreamGroup::drawPlots(ofRectangle r) {
 	else // solo
 	{
 		h = hh; // full height on solo
+		//y = y - (hh * index);
 	}
 
 	for (int i = 0; i < NUM_VARS; i++)
@@ -48,7 +153,18 @@ void DataStreamGroup::drawPlots(ofRectangle r) {
 		}
 
 		int ii = 2 * i;
-		
+
+		////TODO: draw only soloed
+		//if (solo && (ii != index)) { 
+		//	y += h; 
+		//	continue;
+		//}
+
+		//if (solo && (ii != index)) {
+		//	y += h;
+		//	continue;
+		//}
+
 		plot[ii]->draw(x, y, ww, h);
 		plot[ii + 1]->draw(x, y, ww, h);
 
@@ -88,6 +204,41 @@ void DataStreamGroup::drawPlots(ofRectangle r) {
 
 		if (!solo ) y += h;
 	}
+
+	//// extra
+	//x = r.getX();
+	//y = r.getY();
+	//for (int i = 0; i < NUM_PLOTS; i++)
+	//{
+	//	int ii = i / 2;
+	//	//TODO:
+	//	if (solo && (ii != index)) { y += h; continue; }
+
+	//	//baseline
+	//	ofSetColor(colorBaseLine);
+	//	ofSetLineWidth(1);
+	//	ofLine(x, y + h, x + ww, y + h);
+
+	//	//name
+	//	ofSetColor(255, 32);
+	//	ofDrawBitmapString(/*"name: " + */ofToString(i), x + 5, y + 11);
+
+	//	y += h;
+	//	//if (i % 2 == 0) y += h;//overlap
+	//}
+
+	////--
+
+	////if (solo) {
+	////	h = hh / 2;//full height on solo
+	////	//y = y - (hh * index);
+
+	////	//baseline
+	////	ofSetColor(colorBaseLine);
+	////	ofSetLineWidth(1);
+	////	ofLine(x, y + h, x + ww, y + h);
+	////	ofLine(x, y + 2 * h, x + ww, y + 2 * h);
+	////}
 
 	//ofPopMatrix();
 	ofPopStyle();

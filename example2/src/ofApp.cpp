@@ -59,7 +59,6 @@ void ofApp::setupDebugger() {
 	int fontSize = 9;
 	string path = "assets/fonts/";
 	path += "overpass-mono-bold.otf";
-	//path += "mono.ttf";
 	ofxSurfingDebugVariables::loadFont(path, fontSize);
 }
 
@@ -89,6 +88,8 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
+	ofClear(32);
+
 	dataStreamGroup.draw();
 	mMidiParams.draw();
 
