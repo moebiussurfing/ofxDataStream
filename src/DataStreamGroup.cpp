@@ -26,7 +26,8 @@ void DataStreamGroup::drawPlots(ofRectangle r) {
 	int x = r.getX();
 	int y = r.getY();
 
-	ofColor colorBaseLine = ofColor(255, 48);
+	colorBaseLine = ofColor(255, 48);
+	colorSelected = ofColor(255, 150);
 
 	//ofPushMatrix();
 	//ofTranslate(x,y)
@@ -43,9 +44,7 @@ void DataStreamGroup::drawPlots(ofRectangle r) {
 
 	for (int i = 0; i < NUM_VARS; i++)
 	{
-		if (solo) {
-			if (i != index) continue;
-		}
+		if (solo) if (i != index) continue;
 
 		int ii = 2 * i;
 
@@ -53,9 +52,9 @@ void DataStreamGroup::drawPlots(ofRectangle r) {
 		//int hg = h / 2;
 		//plot[ii]->setGridUnit(hg);
 		//plot[ii + 1]->setGridUnit(hg);
-		
-		plot[ii]->draw(x, y, ww, h);
-		plot[ii + 1]->draw(x, y, ww, h);
+
+		plots[ii]->draw(x, y, ww, h);
+		plots[ii + 1]->draw(x, y, ww, h);
 
 		//baseline
 		ofSetColor(colorBaseLine);
@@ -63,21 +62,25 @@ void DataStreamGroup::drawPlots(ofRectangle r) {
 		ofLine(x, y + h, x + ww, y + h);
 
 		//name
-		ofSetColor(255, 32);
+		if (i == index) ofSetColor(colorSelected);
+		else ofSetColor(colorBaseLine);
 		string s = "#" + ofToString(i);
 		ofDrawBitmapString(s, x + 5, y + 11);
 
-		ofColor _c1 = ofColor(colors[ii]);
-		ofColor _c2 = ofColor(colors[ii]);
+		ofColor _c1 = colorSelected;//white
+		ofColor _c2 = colorSelected;
+		//ofColor _c1 = ofColor(colors[ii]);//colored
+		//ofColor _c2 = ofColor(colors[ii]);
+
 		float _a1 = ofxSurfingHelpers::Bounce(1.0);
-		float _a2 = ofxSurfingHelpers::Bounce(0.25);
+		float _a2 = ofxSurfingHelpers::Bounce(0.5);
 
 		//threshold
 		{
 			ofColor c;
 			if (outputs[i].getBonk()) c.set(ofColor(_c2, 90 * _a1));//bonked
 			else if (outputs[i].getTrigger()) c.set(ofColor(_c2, 140 * _a2));//trigged
-			else c.set(ofColor(_c2, 30));//standby
+			else c.set(ofColor(_c2, 20));//standby
 			ofSetColor(c);
 			float yth = y + (1 - threshold)*h;
 			ofLine(x, yth, x + ww, yth);
@@ -87,7 +90,7 @@ void DataStreamGroup::drawPlots(ofRectangle r) {
 		if (i == index && !solo)
 		{
 			ofSetLineWidth(1);
-			ofSetColor(255, 150);
+			ofSetColor(colorSelected);
 			ofLine(x, y, x, y + h);
 		}
 
@@ -103,51 +106,65 @@ void DataStreamGroup::setupPlots() {
 	NUM_VARS = mParamsGroup.size();
 	NUM_PLOTS = 2 * NUM_VARS;
 
-	plot.resize(NUM_PLOTS);
+	index.setMax(NUM_VARS - 1);
 
+	plots.resize(NUM_PLOTS);
+
+	//colors
 	colors.clear();
 	colors.resize(NUM_PLOTS);
 
-	int a1 = 80;
-	int a2 = 255;
-
+	//alphas
+	int a1 = 48;//input
+	int a2 = 255;//output
 	ofColor c;
+
+#ifdef COLORS_MONCHROME
+	for (int i = 0; i < NUM_VARS; i++)
+	{
+		c = colorPlots;
+		colors[2 * i] = ofColor(c, a1);
+		colors[2 * i + 1] = ofColor(c, a2);
+	}
+#endif
+
+#ifndef COLORS_MONCHROME
 	int sat = 255;
 	int brg = 255;
 	int hueStep = 255. / (float)NUM_VARS;
-
 	for (int i = 0; i < NUM_VARS; i++)
 	{
 		c.setHsb(hueStep * i, sat, brg);
 		colors[2 * i] = ofColor(c, a1);
 		colors[2 * i + 1] = ofColor(c, a2);
 	}
+#endif
 
 	for (int i = 0; i < NUM_PLOTS; i++)
 	{
 		string _name;
 		string _name2;
-		_name2 = ofToString(mParamsGroup[i / 2].getName());
-		//_name2 = ofToString(i / 2);
+		_name2 = ofToString(mParamsGroup[i / 2].getName());//param name
+		//_name2 = ofToString(i / 2);//index as name
 
-		bool b1 = i % 2 == 0;
+		bool b1 = (i % 2 == 0);//1st plot of each var. input
+		_name = _name2;
 		//if (b1) _name = "Input " + _name2;
 		//else _name = "Output " + _name2;
-		_name = _name2;
 
 		bool bTitle = !b1;
 		bool bInfo = false;
 		bool bBg = b1;
 		bool bGrid = false && b1;
 
-		plot[i] = new ofxHistoryPlot(NULL, _name, 60 * 4, false);//4 secs at 60fps
-		plot[i]->setRange(0, 1);
-		plot[i]->setColor(colors[i]);
-		plot[i]->setDrawTitle(bTitle);
-		plot[i]->setShowNumericalInfo(bInfo);
-		plot[i]->setShowSmoothedCurve(false);
-		plot[i]->setDrawBackground(bBg);
-		plot[i]->setDrawGrid(bGrid);
+		plots[i] = new ofxHistoryPlot(NULL, _name, 60 * 4, false);//4 secs at 60fps
+		plots[i]->setRange(0, 1);
+		plots[i]->setColor(colors[i]);
+		plots[i]->setDrawTitle(bTitle);
+		plots[i]->setShowNumericalInfo(bInfo);
+		plots[i]->setShowSmoothedCurve(false);
+		plots[i]->setDrawBackground(bBg);
+		plots[i]->setDrawGrid(bGrid);
 	}
 
 	// draggable rectangle
@@ -183,13 +200,25 @@ void DataStreamGroup::startup() {
 	//--
 
 	//startup
-	ofxSurfingHelpers::loadGroup(params, path_Settings);
+	//ofxSurfingHelpers::loadGroup(params, path_Settings);
 }
 
 
 //--------------------------------------------------------------
 void DataStreamGroup::update() {
 	if (ofGetFrameNum() == 0) { startup(); }
+
+	// play timed randoms
+	static int _secs = 2;
+	if (bPlay) {
+		int max = 60 * _secs;
+		tf = ofGetFrameNum() % max;
+		tn = ofMap(tf, 0, max, 0, 1);
+		if (tf == 0)
+		{
+			doRandomize();
+		}
+	}
 
 	if (bUseGenerators) updateGenerators();
 	if (!bUseGenerators) updateSmooths();
@@ -238,11 +267,11 @@ void DataStreamGroup::updatePlots() {
 	{
 		//input
 		float _input = ofClamp(inputs[i], minInput, maxInput);
-		plot[2 * i]->update(_input);//source
+		plots[2 * i]->update(_input);//source
 
 		//output
-		if (enableSmooth) plot[2 * i + 1]->update(outputs[i].getValue());//filtered
-		else plot[2 * i + 1]->update(_input);//source
+		if (enableSmooth) plots[2 * i + 1]->update(outputs[i].getValue());//filtered
+		else plots[2 * i + 1]->update(_input);//source
 
 		if (i == index) input = _input;
 	}
@@ -272,11 +301,11 @@ void DataStreamGroup::updatePlots() {
 		//if (i!=0)continue;
 
 		if (outputs[i].getTrigger()) {
-			if (i == index) ofLogNotice() << "Trigger: " << i;
+			if (i == index) ofLogVerbose() << "Trigger: " << i;
 		}
 
 		if (outputs[i].getBonk()) {
-			if (i == index) ofLogNotice() << "Bonk: " << i;
+			if (i == index) ofLogVerbose() << "Bonk: " << i;
 		}
 
 		// if the direction has changed and
@@ -285,7 +314,7 @@ void DataStreamGroup::updatePlots() {
 		if (outputs[i].getDirectionTimeDiff() > 0.5 && outputs[i].directionHasChanged())
 		{
 			if (i == index)
-				ofLogNotice() << "Direction: " << i << " " << outputs[i].getDirectionTimeDiff() << " "
+				ofLogVerbose() << "Direction: " << i << " " << outputs[i].getDirectionTimeDiff() << " "
 				<< outputs[i].getDirectionValDiff();
 		}
 	}
@@ -293,14 +322,18 @@ void DataStreamGroup::updatePlots() {
 
 //--------------------------------------------------------------
 void DataStreamGroup::updateGenerators() {
+	if (ofGetFrameNum() % 20 == 0) {
+		if (ofRandom(0, 1) > 0.5) bTrigManual = !bTrigManual;
+	}
 
 	for (int i = 0; i < NUM_GENERATORS; i++) {
 		switch (i) {
 		case 0: generators[i] = (bTrigManual ? 1 : 0); break;
-		case 1: generators[i] = ofxSurfingHelpers::Tick((bModeNoise ? 0.2 : 1)); break;
-		case 2: generators[i] = ofxSurfingHelpers::Noise(ofPoint((!bModeNoise ? 1 : 0.001), (!bModeNoise ? 1.3 : 2.3))); break;
-		case 3: generators[i] = ofClamp(ofxSurfingHelpers::NextGaussian(0.5, (bModeNoise ? 1 : 0.1)), 0, 1); break;
-		case 4: generators[i] = ofxSurfingHelpers::NextReal(0, (bModeNoise ? 1 : 0.1)); break;
+		case 1: generators[i] = ofxSurfingHelpers::Tick((bModeFast ? 0.2 : 1)); break;
+		case 2: generators[i] = ofxSurfingHelpers::Noise(ofPoint((!bModeFast ? 1 : 0.001), (!bModeFast ? 1.3 : 2.3))); break;
+		case 3: generators[i] = ofClamp(ofxSurfingHelpers::NextGaussian(0.5, (bModeFast ? 1 : 0.1)), 0, 1); break;
+		case 4: generators[i] = ofxSurfingHelpers::NextReal(0, (bModeFast ? 1 : 0.1)); break;
+		case 5: generators[i] = ofxSurfingHelpers::Noise(ofPoint((!bModeFast ? 1 : 0.00001), (!bModeFast ? 0.3 : 0.03))); break;
 		}
 
 		//outputs[i].update(inputs[i]); // raw value, index (optional)
@@ -351,7 +384,7 @@ void DataStreamGroup::draw() {
 		ofPushStyle();
 		if (bFullScreen) drawPlots(ofGetCurrentViewport());
 		else drawPlots(rectangle_Plots);
-		
+
 		ofSetColor(ofColor(255, 4));
 		rectangle_Plots.draw();
 		ofPopStyle();
@@ -465,14 +498,14 @@ void DataStreamGroup::setupParams() {
 	float _outMaxRange;
 
 
-	//    if (_bNormalized)
+	//    if (_bNormalized)//normalizad
 	{
 		_inputMinRange = 0;
 		_inputMaxRange = 1;
 		_outMaxRange = 1;
 		_outMinRange = 0;
 	}
-	//    else
+	//    else//midi range
 	//    {
 	//        _inputMinRange = 0;
 	//        _inputMaxRange = 1;
@@ -481,8 +514,9 @@ void DataStreamGroup::setupParams() {
 	//    }
 
 	params.setName(name);
-	params.add(index.set("index", 0, 0, 4));//TODO: 5 channels / generators
-	//params.add(enable.set("ENABLE", true));
+	params.add(index.set("index", 0, 0, 0));
+	params.add(bPlay.set("Play", false));
+	params.add(enable.set("ENABLE", true));
 	params.add(bShowPlots.set("Show Plots", true));
 	params.add(bFullScreen.set("Full Screen", false));
 	params.add(bUseGenerators.set("Use Generators", false));
@@ -502,7 +536,7 @@ void DataStreamGroup::setupParams() {
 	params.add(slideMax.set("Slide Out", 0.2, 0.0, 1));
 	params.add(onsetGrow.set("Onset Grow", 0.1, 0.0, 1));
 	params.add(onsetDecay.set("Onset Decay", 0.1, 0.0, 1));
-	params.add(threshold.set("Threshold", 0.5, 0.0, 1));
+	params.add(threshold.set("Threshold", 0.85, 0.0, 1));
 	params.add(bReset.set("RESET", false));
 	//params.add(bClamp.set("CLAMP", true));
 
@@ -541,6 +575,7 @@ void DataStreamGroup::exit() {
 void DataStreamGroup::doReset() {
 	ofLogNotice(__FUNCTION__) << "output: " << ofToString(output);
 	enable = true;
+	bPlay = false;
 	bUseGenerators = false;
 	bShowPlots = true;
 	enableSmooth = true;
@@ -558,6 +593,7 @@ void DataStreamGroup::doReset() {
 	typeSmooth = 1;
 	typeMean = 0;
 	bClamp = true;
+	threshold = 0.85;
 }
 
 // callback for a parameter group
@@ -806,7 +842,11 @@ void DataStreamGroup::draw_ImGui()
 			{
 				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
-				if (ImGui::CollapsingHeader("MONITOR", ImGuiTreeNodeFlags_DefaultOpen))
+				ImGuiTreeNodeFlags _f;
+				_f = ImGuiTreeNodeFlags_None;
+				//_f = ImGuiTreeNodeFlags_DefaultOpen;
+
+				if (ImGui::CollapsingHeader("MONITOR", _f))
 				{
 					//ofxImGui::AddParameter(index);
 					if (ofxImGui::AddStepper(index)) {
@@ -821,7 +861,13 @@ void DataStreamGroup::draw_ImGui()
 
 				//ofxImGui::AddGroup(params, mainSettings);// group
 
-				ofxSurfingHelpers::AddBigToggle(enable, _w100, _h);
+				//ofxSurfingHelpers::AddBigToggle(enable, _w100, _h);//TODO:
+
+				//TODO:
+				//blink by timer
+				//tn
+				ofxSurfingHelpers::AddBigToggle(bPlay, _w100, _h);
+
 				ofxSurfingHelpers::AddBigToggle(bShowPlots, _w100, _h50);
 				ofxSurfingHelpers::AddBigToggle(bFullScreen, _w100, _h50);
 				ofxSurfingHelpers::AddBigToggle(bUseGenerators, _w100, _h50);
@@ -972,14 +1018,43 @@ void DataStreamGroup::draw_ImGui()
 	//gui.draw();
 }
 
+//----
+
 //--------------------------------------------------------------
 void DataStreamGroup::addParam(ofAbstractParameter& aparam) {
+	//ofLogNotice() << __FUNCTION__ << " " << aparam.getName();
+
+	//--
+
+	//TODO:
+	//nested groups
+	// https://forum.openframeworks.cc/t/ofxparametercollection-manage-multiple-ofparameters/34888/3
+	auto type = aparam.type();
+
+	//////string typeStr = type;
+	bool isGroup = type == typeid(ofParameterGroup).name();
+	//bool isFloat = type == typeid(ofParameter<float>).name();
+	//bool isInt = type == typeid(ofParameter<int>).name();
+	//bool isBool = type == typeid(ofParameter<bool>).name();
+
+	ofLogNotice() << __FUNCTION__ << " " << aparam.getName() << " : " << type;
+
+	if (isGroup)
+	{
+		auto &g = aparam.castGroup();
+		for (int i = 0; i < g.size(); i++) {
+			addParam(g.get(i));
+		}
+	}
+	
+	// exclude groups to remove from plots
+	if(!isGroup) mParamsGroup.add(aparam);
+
+	//--
 
 	//auto mac = make_shared<DataStreamGroup::MidiParamAssoc>();
 	//mac->paramIndex = mParamsGroup.size();
-
 	////ofLogWarning() << __FUNCTION__ << " ";
-
 	//if (aparam.type() == typeid(ofParameter<int>).name()) {
 	//	mac->ptype = PTYPE_INT;
 	//	ofParameter<int> ti = aparam.cast<int>();
@@ -1008,10 +1083,8 @@ void DataStreamGroup::addParam(ofAbstractParameter& aparam) {
 	//	//ofLogNotice("ofxMidiParams :: addParam : unsupported param type");
 	//	return;
 	//}
-
 	//mac->xmlName = aparam.getEscapedName();
-
-	mParamsGroup.add(aparam);
+	//mParamsGroup.add(aparam);
 	//mAssocParams.push_back(mac);
 
 	//-
@@ -1027,20 +1100,24 @@ void DataStreamGroup::addParam(ofAbstractParameter& aparam) {
 
 //--------------------------------------------------------------
 void DataStreamGroup::addGroup(ofParameterGroup& aparams) {
+	ofLogNotice() << __FUNCTION__ << " " << aparams.getName();
+
 	for (int i = 0; i < aparams.size(); i++) {
 		addParam(aparams.get(i));
 	}
 
 	//--
 
-	setupPlots();
+	// already added all params content
+	// build the smoothers
+	// build the plots
 
-	//int _size = NUM_VARS;
-	int _size = mParamsGroup.size();
+	setupPlots();//NUM_VARS is counted here..
 
-	outputs.resize(_size);
-	inputs.resize(_size);
-	for (int i = 0; i < _size; i++)
+	outputs.resize(NUM_VARS);
+	inputs.resize(NUM_VARS);
+
+	for (int i = 0; i < NUM_VARS; i++)
 	{
 		//default init
 		outputs[i].initAccum(100);
@@ -1078,7 +1155,7 @@ void DataStreamGroup::Changed_Controls_Out(ofAbstractParameter &e)
 
 	std::string name = e.getName();
 
-	ofLogNotice(__FUNCTION__) << name << " : " << e;
+	ofLogVerbose(__FUNCTION__) << name << " : " << e;
 
 }
 
@@ -1090,7 +1167,7 @@ ofAbstractParameter& DataStreamGroup::getParam(ofAbstractParameter &e) {
 	//log
 	auto i = mParamsGroup.getPosition(name);
 	float value = outputs[i].getValue();
-	ofLogNotice(__FUNCTION__) << name << " : " << value;
+	ofLogVerbose(__FUNCTION__) << name << " : " << value;
 
 	//ofAbstractParameter& aparam = mParamsGroup[i];
 	//float value = 0;

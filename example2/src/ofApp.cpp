@@ -6,30 +6,45 @@ void ofApp::setup() {
 	params.setName("ParamsGroup"); 
 	params.add(lineWidth.set("lineWidth", 0.5, 0, 1));
 	params.add(separation.set("separation", 50, 1, 100));
+	params.add(speed.set("speed", 0.5, 0, 1));
 	params.add(shapeType.set("shapeType", 0, -50, 50));
 	params.add(size.set("size", 100, 0, 100));
 	params.add(amount.set("amount", 10, 0, 25));
+	// nested
+	params2.setName("ParamsGroup2");
+	params2.add(shapeType2.set("shapeType2", 0, -50, 50));
+	params2.add(size2.set("size2", 100, 0, 100));
+	params2.add(amount2.set("amount2", 10, 0, 25));
+	params.add(params2);
 
+	//--
+
+	// smooth
 	dataStreamGroup.setup();
 	dataStreamGroup.addGroup(params);
 
+	// midi
 	mMidiParams.connect(1, true);
-	mMidiParams.add(params);
-	mMidiParams.load("example-midi-params.xml");
+	mMidiParams.add(params);//is not recursive, can't be group nested..
+	mMidiParams.add(params2);
+	//mMidiParams.load("midiParams.xml");
 
-	//ofSetLogLevel(OF_LOG_WARNING);
-
+	// debug
 	setupDebugger();
 
 	//--
 
-	//gui
+	// gui
 	paramsApp.add(mMidiParams.bShowGui);
 	paramsApp.add(dataStreamGroup.bShowGui);
 	paramsApp.add(ofxSurfingDebugVariables::getParamGui());
+
 	gui.setup();
 	gui.add(paramsApp);
+	
 	ofxSurfingHelpers::loadGroup(paramsApp);
+
+	//ofSetLogLevel(OF_LOG_WARNING);
 }
 
 //--------------------------------------------------------------
@@ -40,9 +55,13 @@ void ofApp::setupDebugger() {
 
 	ofxSurfingDebugVariables::addParamFloat(lineWidth);
 	ofxSurfingDebugVariables::addParamFloat(separation);
+	ofxSurfingDebugVariables::addParamFloat(speed);
 	ofxSurfingDebugVariables::addParamInt(shapeType);
 	ofxSurfingDebugVariables::addParamInt(size);
 	ofxSurfingDebugVariables::addParamInt(amount);
+	ofxSurfingDebugVariables::addParamInt(shapeType2);
+	ofxSurfingDebugVariables::addParamInt(size2);
+	ofxSurfingDebugVariables::addParamInt(amount2);
 
 	//ofxSurfingDebugVariables::addNewLine();
 	//ofxSurfingDebugVariables::addInt("myInt2 (seconds)", &i2);
@@ -54,7 +73,7 @@ void ofApp::setupDebugger() {
 	// cutomization
 
 	// show box. hidden by default
-	ofxSurfingDebugVariables::setShowing(true);
+	//ofxSurfingDebugVariables::setShowing(true);
 
 	int fontSize = 9;
 	string path = "assets/fonts/";

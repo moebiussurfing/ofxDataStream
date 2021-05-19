@@ -33,9 +33,16 @@ class ofApp : public ofBaseApp{
 		ofParameterGroup params;
 		ofParameter<float> lineWidth;
 		ofParameter<float> separation;
+		ofParameter<float> speed;
 		ofParameter<int> shapeType;
 		ofParameter<int> amount;
 		ofParameter<int> size;
+
+		ofParameterGroup params2;
+		ofParameter<int> shapeType2;
+		ofParameter<int> amount2;
+		ofParameter<int> size2;
+
 		ofxMidiParams mMidiParams;
 
 		ofxWindowApp windowApp;

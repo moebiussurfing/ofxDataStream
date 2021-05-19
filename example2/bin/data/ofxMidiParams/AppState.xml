@@ -2,8 +2,8 @@
     "AppState": {
         "Auto_Name_Learn": "1",
         "Minimize": "1",
-        "Position_GUI": "1516, 43",
-        "SHOW_MIDI_PARAMS": "1",
+        "Position_GUI": "1375, 35",
+        "SHOW_MIDI_PARAMS": "0",
         "Show_Internal": "0"
     }
 }

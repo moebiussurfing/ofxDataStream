@@ -4,10 +4,9 @@
 
 TODO:
 
-+ add param to calibrate max history smooth
-+ overlap two plots
 + try nested groups
-+ add colors, vectors, templates...
++ add param to calibrate max history smooth
++ add colors types, vectors, templates...
 
 */
 
@@ -22,37 +21,36 @@ TODO:
 #include "ofxSurfing_Timers.h"
 #include "ofxSurfing_ImGui.h"
 #include "ofxInteractiveRect.h"
-//#include "ofxGui.h"
 
-#define NUM_GENERATORS 5
-//#define NUM_VARS 5
-//#define NUM_PLOTS 10
+#define NUM_GENERATORS 6
 
-class DataStreamGroup : public ofBaseApp{
+#define COLORS_MONCHROME
 
-//private:
-//	enum ParamType {
-//		PTYPE_FLOAT = 0,
-//		PTYPE_INT,
-//		PTYPE_BOOL,
-//		PTYPE_UNKNOWN
-//	};
-//
-//private:
-//	class MidiParamAssoc {
-//	public:
-//		//int midiId = -1;
-//		int paramIndex = 0;
-//		ParamType ptype = PTYPE_UNKNOWN;
-//		//ofRectangle drawRect;
-//		string displayMidiName = "";
-//		//bool bListening = false;
-//		//bool bNeedsTextPrompt = false;
-//		string xmlParentName = "";
-//		string xmlName = "";
-//	}; 
-//vector< shared_ptr<MidiParamAssoc> > mAssocParams;
-	
+class DataStreamGroup : public ofBaseApp {
+
+	//private:
+	//	enum ParamType {
+	//		PTYPE_FLOAT = 0,
+	//		PTYPE_INT,
+	//		PTYPE_BOOL,
+	//		PTYPE_UNKNOWN
+	//	};
+	//
+	//private:
+	//	class MidiParamAssoc {
+	//	public:
+	//		//int midiId = -1;
+	//		int paramIndex = 0;
+	//		ParamType ptype = PTYPE_UNKNOWN;
+	//		//ofRectangle drawRect;
+	//		string displayMidiName = "";
+	//		//bool bListening = false;
+	//		//bool bNeedsTextPrompt = false;
+	//		string xmlParentName = "";
+	//		string xmlName = "";
+	//	}; 
+	//vector< shared_ptr<MidiParamAssoc> > mAssocParams;
+
 private:
 	ofParameterGroup mParamsGroup;
 	void Changed_Controls_Out(ofAbstractParameter &e);
@@ -65,7 +63,7 @@ public:
 	void add(ofParameter<bool>& aparam);
 	void add(ofParameter<int>& aparam);
 	void addParam(ofAbstractParameter& aparam);
-	
+
 	// api getters
 public:
 	float getParamFloatValue(ofAbstractParameter &e);
@@ -75,93 +73,104 @@ public:
 	ofParameter<float>& getParamFloat(string name);
 	ofParameter<int>& getParamInt(string name);
 
-    void doRandomize();
+	void doRandomize();
 
 	//----
 
 public:
-	string path_Settings = "DataStreamGroup.xml";
 
-	ofxInteractiveRect rectangle_Plots = { "Rect_Plots" };
-	
-int NUM_PLOTS;
-int NUM_VARS;
+	void setup();
+	void startup();
 
-    //ofxHistoryPlot * plot[NUM_PLOTS];
-	vector<ofxHistoryPlot *> plot;
-
-    vector<ofColor> colors;
-
-    void setup();
-    void startup();
-    
 	void setupPlots();
 	void drawPlots(ofRectangle r);
 
-    void update();
-    
+	void update();
+
 	void updateGenerators();
-    void updateSmooths();
-    void updatePlots();
+	void updateSmooths();
+	void updatePlots();
 
-    void draw();
-    void exit();
+	void draw();
+	void exit();
 
-    void keyPressed(int key);
-    void keyReleased(int key);
-    void mouseMoved(int x, int y );
-    void mouseDragged(int x, int y, int button);
-    void mousePressed(int x, int y, int button);
-    void mouseReleased(int x, int y, int button);
-    void mouseEntered(int x, int y);
-    void mouseExited(int x, int y);
-    void windowResized(int w, int h);
-    void dragEvent(ofDragInfo dragInfo);
-    void gotMessage(ofMessage msg);
+	void keyPressed(int key);
+	void keyReleased(int key);
+	void mouseMoved(int x, int y);
+	void mouseDragged(int x, int y, int button);
+	void mousePressed(int x, int y, int button);
+	void mouseReleased(int x, int y, int button);
+	void mouseEntered(int x, int y);
+	void mouseExited(int x, int y);
+	void windowResized(int w, int h);
+	void dragEvent(ofDragInfo dragInfo);
+	void gotMessage(ofMessage msg);
 
-    vector<ofxDataStream> outputs;
-    vector<float> inputs;
-    vector<float> generators;
+	vector<ofxDataStream> outputs;
+	vector<float> inputs;
+	vector<float> generators;
 
-    //ofxPanel gui;
+	string path_Settings = "DataStreamGroup.xml";
 
-    void Changed_Params(ofAbstractParameter &e);
+	ofxInteractiveRect rectangle_Plots = { "Rect_Plots" };
 
-    ofParameterGroup params;
-    ofParameter<bool> enable;
-    ofParameter<bool> bFullScreen;
-    ofParameter<bool> bShowPlots;
-    ofParameter<bool> bUseGenerators;
-    ofParameter<bool> solo;
-    ofParameter<int> index;
-    ofParameter<int> typeSmooth;
-    ofParameter<string> typeSmooth_Str;
+	int NUM_PLOTS;
+	int NUM_VARS;
+
+	vector<ofxHistoryPlot *> plots;
+	vector<ofColor> colors;
+
+#ifdef COLORS_MONCHROME
+	ofColor colorPlots = (ofColor::green);
+	//ofColor colorPlots = (ofColor::yellow);
+	//ofColor colorPlots = (ofColor::white);
+#endif
+	ofColor colorSelected;
+	ofColor colorBaseLine;
+
+	//ofxPanel gui;
+
+	void Changed_Params(ofAbstractParameter &e);
+
+	ofParameterGroup params;
+	ofParameter<bool> enable;
+	ofParameter<bool> bFullScreen;
+	ofParameter<bool> bShowPlots;
+	ofParameter<bool> bUseGenerators;
+	ofParameter<bool> solo;
+	ofParameter<int> index;
+	ofParameter<int> typeSmooth;
+	ofParameter<string> typeSmooth_Str;
 	ofParameter<int> typeMean;
 	ofParameter<string> typeMean_Str;
-    ofParameter<bool> bClamp;
-    ofParameter<float> minInput;
-    ofParameter<float> maxInput;
-    ofParameter<bool> bNormalized;
-    ofParameter<float> minOutput;
-    ofParameter<float> maxOutput;
-    ofParameter<bool> enableSmooth;
-    ofParameter<float> smoothPower;
-    ofParameter<float> threshold;
-    ofParameter<float> onsetGrow;
-    ofParameter<float> onsetDecay;
-    ofParameter<float> slideMin;
-    ofParameter<float> slideMax;
-    ofParameter<float> input;//index selected
-    ofParameter<float> output;
-    ofParameter<bool> bReset;
+	ofParameter<bool> bClamp;
+	ofParameter<float> minInput;
+	ofParameter<float> maxInput;
+	ofParameter<bool> bNormalized;
+	ofParameter<float> minOutput;
+	ofParameter<float> maxOutput;
+	ofParameter<bool> enableSmooth;
+	ofParameter<float> smoothPower;
+	ofParameter<float> threshold;
+	ofParameter<float> onsetGrow;
+	ofParameter<float> onsetDecay;
+	ofParameter<float> slideMin;
+	ofParameter<float> slideMax;
+	ofParameter<float> input;//index selected
+	ofParameter<float> output;
+	ofParameter<bool> bReset;
+	ofParameter<bool> bPlay;
+	
+	int tf;
+	float tn;
 
-    void doReset();
-    void setupParams();
+	void doReset();
+	void setupParams();
 
-    bool bTrigManual =false;//flip first
-    bool bModeNoise =false;//fast generators
+	bool bTrigManual = false;//flip first
+	bool bModeFast = false;//fast generators
 
-    ofColor colorBg;
+	ofColor colorBg;
 
 	void setup_ImGui();
 	void draw_ImGui();
@@ -169,24 +178,12 @@ int NUM_VARS;
 	ofxImGui::Settings mainSettings = ofxImGui::Settings();
 	ImFont* customFont = nullptr;
 	ofParameter<bool> bGui{ "Show ImGui", true };
-	ofParameter<bool> auto_resize{ "Auto Resize", true};
+	ofParameter<bool> auto_resize{ "Auto Resize", true };
 	ofParameter<bool> bLockMouseByImGui{ "Mouse Locked", false };
 	ofParameter<bool> auto_lockToBorder{ "Lock GUI", false };
 
 public:
 	ofParameter<bool> bShowGui{ "SHOW DATA STREAM", true };
-
-	//enum Smoothing_t {
-	//	SMOOTHING_NONE,
-	//	SMOOTHING_ACCUM,
-	//	SMOOTHING_SLIDE
-	//} smoothingType;
-
-	//enum Mean_t {
-	//	MEAN_ARITH,
-	//	MEAN_GEOM,
-	//	MEAN_HARM,
-	//} meanType;
 
 	std::vector<std::string> typeSmoothLabels;
 	std::vector<std::string> typeMeanLabels;
