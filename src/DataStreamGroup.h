@@ -129,6 +129,7 @@ int NUM_VARS;
 
     ofParameterGroup params;
     ofParameter<bool> enable;
+    ofParameter<bool> bFullScreen;
     ofParameter<bool> bShowPlots;
     ofParameter<bool> bUseGenerators;
     ofParameter<bool> solo;

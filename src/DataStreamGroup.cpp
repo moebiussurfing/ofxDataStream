@@ -48,6 +48,11 @@ void DataStreamGroup::drawPlots(ofRectangle r) {
 		}
 
 		int ii = 2 * i;
+
+		////grid
+		//int hg = h / 2;
+		//plot[ii]->setGridUnit(hg);
+		//plot[ii + 1]->setGridUnit(hg);
 		
 		plot[ii]->draw(x, y, ww, h);
 		plot[ii + 1]->draw(x, y, ww, h);
@@ -79,14 +84,14 @@ void DataStreamGroup::drawPlots(ofRectangle r) {
 		}
 
 		//mark selected
-		if (i == index)
+		if (i == index && !solo)
 		{
 			ofSetLineWidth(1);
-			ofSetColor(255, 100);
+			ofSetColor(255, 150);
 			ofLine(x, y, x, y + h);
 		}
 
-		if (!solo ) y += h;
+		if (!solo) y += h;
 	}
 
 	//ofPopMatrix();
@@ -103,7 +108,7 @@ void DataStreamGroup::setupPlots() {
 	colors.clear();
 	colors.resize(NUM_PLOTS);
 
-	int a1 = 100;
+	int a1 = 80;
 	int a2 = 255;
 
 	ofColor c;
@@ -133,6 +138,7 @@ void DataStreamGroup::setupPlots() {
 		bool bTitle = !b1;
 		bool bInfo = false;
 		bool bBg = b1;
+		bool bGrid = false && b1;
 
 		plot[i] = new ofxHistoryPlot(NULL, _name, 60 * 4, false);//4 secs at 60fps
 		plot[i]->setRange(0, 1);
@@ -141,47 +147,22 @@ void DataStreamGroup::setupPlots() {
 		plot[i]->setShowNumericalInfo(bInfo);
 		plot[i]->setShowSmoothedCurve(false);
 		plot[i]->setDrawBackground(bBg);
-		plot[i]->setDrawGrid(false);
-		//int h = ofGetHeight() / NUM_PLOTS;
-		//plot[i]->setGridUnit(h / 4);
+		plot[i]->setDrawGrid(bGrid);
 	}
 
-	//rectangle_Plots.setAutoSave(true);
-	//rectangle_Plots.enableEdit();
-	//rectangle_Plots.setRect(10, 10, 400, 400);
+	// draggable rectangle
+	ofColor c0(0, 90);
+	rectangle_Plots.setColorEditingHover(c0);
+	rectangle_Plots.setColorEditingMoving(c0);
 }
 
 //--------------------------------------------------------------
 void DataStreamGroup::setup() {
 	setupParams();
 
-	//gui.setup(params);
-	//gui.setPosition(80, 80);
-
-	//ofBackground(66);
-	//ofEnableAlphaBlending();
-	//ofSetFrameRate(25);
-
-	colorBg = ofColor(32);
-
-	//--
-
-	//setupPlots();
-
 	//--
 
 	generators.resize(NUM_GENERATORS);
-
-	//inputs.resize(NUM_VARS);
-	//outputs.resize(NUM_VARS);
-
-	////for (int i = 0; i < NUM_VARS; i++)
-	////{
-	////	//default init
-	////	outputs[i].initAccum(100);
-	////	outputs[i].directionChangeCalculated = true;
-	////	outputs[i].setBonk(0.1, 0.0);
-	////}
 
 	//--
 
@@ -245,6 +226,7 @@ void DataStreamGroup::updateSmooths() {
 		//-
 
 		inputs[i] = value; // prepare and feed input
+
 		outputs[i].update(inputs[i]); // raw value, index (optional)
 	}
 }
@@ -366,18 +348,19 @@ void DataStreamGroup::draw() {
 	if (!bShowGui) return;
 
 	if (bShowPlots) {
-		//drawPlots(ofGetCurrentViewport());
-		drawPlots(rectangle_Plots);
-
+		ofPushStyle();
+		if (bFullScreen) drawPlots(ofGetCurrentViewport());
+		else drawPlots(rectangle_Plots);
+		
 		ofSetColor(ofColor(255, 4));
-		//ofDrawRectangle(rectangle_Plots);
 		rectangle_Plots.draw();
+		ofPopStyle();
 	}
 
 	//-
 
-	//gui.draw();
 	if (bGui) draw_ImGui();
+	//gui.draw();
 }
 
 //--------------------------------------------------------------
@@ -499,8 +482,9 @@ void DataStreamGroup::setupParams() {
 
 	params.setName(name);
 	params.add(index.set("index", 0, 0, 4));//TODO: 5 channels / generators
-	params.add(enable.set("ENABLE", true));
+	//params.add(enable.set("ENABLE", true));
 	params.add(bShowPlots.set("Show Plots", true));
+	params.add(bFullScreen.set("Full Screen", false));
 	params.add(bUseGenerators.set("Use Generators", false));
 	params.add(enableSmooth.set("SMOOTH", true));
 	params.add(solo.set("SOLO", false));
@@ -839,6 +823,7 @@ void DataStreamGroup::draw_ImGui()
 
 				ofxSurfingHelpers::AddBigToggle(enable, _w100, _h);
 				ofxSurfingHelpers::AddBigToggle(bShowPlots, _w100, _h50);
+				ofxSurfingHelpers::AddBigToggle(bFullScreen, _w100, _h50);
 				ofxSurfingHelpers::AddBigToggle(bUseGenerators, _w100, _h50);
 				if (ImGui::Button("RANDOMIZE", ImVec2(_w100, _h50))) {
 					doRandomize();
