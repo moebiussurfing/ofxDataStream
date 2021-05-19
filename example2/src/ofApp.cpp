@@ -42,7 +42,7 @@ void ofApp::setup() {
 	gui.setup();
 	gui.add(paramsApp);
 	
-	ofxSurfingHelpers::loadGroup(paramsApp);
+	//ofxSurfingHelpers::loadGroup(paramsApp);
 
 	//ofSetLogLevel(OF_LOG_WARNING);
 }

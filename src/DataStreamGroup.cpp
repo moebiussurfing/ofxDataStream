@@ -211,7 +211,8 @@ void DataStreamGroup::update() {
 	// play timed randoms
 	static int _secs = 2;
 	if (bPlay) {
-		int max = 60 * _secs;
+		int max = ofMap(playSpeed, 0, 1, 60, 5) * _secs;
+		//int max = 60 * _secs;
 		tf = ofGetFrameNum() % max;
 		tn = ofMap(tf, 0, max, 0, 1);
 		if (tf == 0)
@@ -867,13 +868,17 @@ void DataStreamGroup::draw_ImGui()
 				//blink by timer
 				//tn
 				ofxSurfingHelpers::AddBigToggle(bPlay, _w100, _h);
+				if (ImGui::Button("RANDOMIZE", ImVec2(_w100, _h50))) {
+					doRandomize();
+				}
+				if (bPlay) {
+					ImGui::SliderFloat("Speed", &playSpeed, 0, 1);
+				}
+				ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 				ofxSurfingHelpers::AddBigToggle(bShowPlots, _w100, _h50);
 				ofxSurfingHelpers::AddBigToggle(bFullScreen, _w100, _h50);
 				ofxSurfingHelpers::AddBigToggle(bUseGenerators, _w100, _h50);
-				if (ImGui::Button("RANDOMIZE", ImVec2(_w100, _h50))) {
-					doRandomize();
-				}
 
 				ImGui::Dummy(ImVec2(0.0f, 2.0f));
 

@@ -160,7 +160,8 @@ public:
 	ofParameter<float> output;
 	ofParameter<bool> bReset;
 	ofParameter<bool> bPlay;
-	
+	float playSpeed;
+
 	int tf;
 	float tn;
 
