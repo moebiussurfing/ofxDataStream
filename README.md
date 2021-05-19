@@ -1,10 +1,18 @@
 Changes in this fork from **@moebiusSurfing**  
 
+# NEW ADD-ON  
+[Work in progress] 
+
+# Overview
+Smooth Enigne for ofParameters.
+
 Dependencies:  
 * ofxSurfingHelpers
 * ofxHistoryPlot
+* ofxImGui
+* ofxSurfingDebugVariables
 
-**Added example**:  
+**Example2**:  
 ![Screenshot](/readme_images/Capture.png?raw=true "Capture.PNG")  
 
 ---------------------------
