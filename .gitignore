@@ -553,3 +553,10 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+example2/bin/data/Rectangle_Rect_Plots.xml
+example2/bin/data/Rectangle_myRect.xml
+example2/bin/data/ofxMidiParams/Midi-Params.xml
+example2/bin/data/ofxMidiParams/AppState.xml
+example2/bin/data/example-midi-params.xml
+example2/bin/data/DataStreamGroup.xml
+example2/bin/imgui.ini

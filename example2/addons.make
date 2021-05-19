@@ -5,5 +5,6 @@ ofxImGui
 ofxMidi
 ofxMidiParams
 ofxScaleDragRect
+ofxSurfingDebugVariables
 ofxSurfingHelpers
 ofxWindowApp

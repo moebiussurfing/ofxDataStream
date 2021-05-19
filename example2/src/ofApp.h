@@ -4,11 +4,14 @@
 #include "DataStreamGroup.h"
 #include "ofxWindowApp.h"
 #include "ofxMidiParams.h"
+#include "ofxSurfingDebugVariables.h"
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
 
 	public:
 		void setup();
+		void setupDebugger();
 		void update();
 		void draw();
 		void exit();
@@ -29,11 +32,13 @@ class ofApp : public ofBaseApp{
 
 		ofParameterGroup params;
 		ofParameter<float> lineWidth;
+		ofParameter<float> separation;
 		ofParameter<int> shapeType;
 		ofParameter<int> amount;
-		ofParameter<int> separation;
 		ofParameter<int> size;
 		ofxMidiParams mMidiParams;
 
 		ofxWindowApp windowApp;
+
+		ofxPanel gui;
 };
