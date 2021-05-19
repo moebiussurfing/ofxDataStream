@@ -23,11 +23,44 @@ void ofApp::setup() {
 
 	//--
 
+	//gui
+	paramsApp.add(mMidiParams.bShowGui);
+	paramsApp.add(dataStreamGroup.bShowGui);
+	paramsApp.add(ofxSurfingDebugVariables::getParamGui());
 	gui.setup();
-	gui.add(mMidiParams.bShowGui);
-	gui.add(dataStreamGroup.bShowGui);
-	gui.add(ofxSurfingDebugVariables::getParamGui());
-	//gui.add(ofxSurfingDebugVariables::bShowGui);
+	gui.add(paramsApp);
+	ofxSurfingHelpers::loadGroup(paramsApp);
+}
+
+//--------------------------------------------------------------
+void ofApp::setupDebugger() {
+
+	ofxSurfingDebugVariables::setTitle("DataStreamGroup");
+	ofxSurfingDebugVariables::addNewLine();
+
+	ofxSurfingDebugVariables::addParamFloat(lineWidth);
+	ofxSurfingDebugVariables::addParamFloat(separation);
+	ofxSurfingDebugVariables::addParamInt(shapeType);
+	ofxSurfingDebugVariables::addParamInt(size);
+	ofxSurfingDebugVariables::addParamInt(amount);
+
+	//ofxSurfingDebugVariables::addNewLine();
+	//ofxSurfingDebugVariables::addInt("myInt2 (seconds)", &i2);
+	//ofxSurfingDebugVariables::addFloat("myFloat4 ", &f4);
+	//ofxSurfingDebugVariables::addBool("myBool2", &b2);
+
+	//----
+
+	// cutomization
+
+	// show box. hidden by default
+	ofxSurfingDebugVariables::setShowing(true);
+
+	int fontSize = 9;
+	string path = "assets/fonts/";
+	path += "overpass-mono-bold.otf";
+	//path += "mono.ttf";
+	ofxSurfingDebugVariables::loadFont(path, fontSize);
 }
 
 //--------------------------------------------------------------
@@ -52,7 +85,6 @@ void ofApp::update() {
 
 
 	//ofxSurfingDebugVariables::addText("hello");
-
 }
 
 //--------------------------------------------------------------
@@ -68,6 +100,8 @@ void ofApp::exit() {
 	dataStreamGroup.exit();
 
 	ofxSurfingDebugVariables::exit();
+
+	ofxSurfingHelpers::saveGroup(paramsApp);
 }
 
 //--------------------------------------------------------------
@@ -123,35 +157,4 @@ void ofApp::gotMessage(ofMessage msg) {
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo) {
 
-}
-
-//--------------------------------------------------------------
-void ofApp::setupDebugger() {
-
-	ofxSurfingDebugVariables::setTitle("DataStreamGroup");
-	ofxSurfingDebugVariables::addNewLine();
-
-	ofxSurfingDebugVariables::addParamFloat(lineWidth);
-	ofxSurfingDebugVariables::addParamFloat(separation);
-	ofxSurfingDebugVariables::addParamInt(shapeType);
-	ofxSurfingDebugVariables::addParamInt(size);
-	ofxSurfingDebugVariables::addParamInt(amount);
-
-	//ofxSurfingDebugVariables::addNewLine();
-	//ofxSurfingDebugVariables::addInt("myInt2 (seconds)", &i2);
-	//ofxSurfingDebugVariables::addFloat("myFloat4 ", &f4);
-	//ofxSurfingDebugVariables::addBool("myBool2", &b2);
-
-	//----
-
-	// cutomization
-
-	// show box. hidden by default
-	ofxSurfingDebugVariables::setShowing(true);
-
-	int fontSize = 9;
-	string path = "assets/fonts/";
-	path += "overpass-mono-bold.otf";
-	//path += "mono.ttf";
-	ofxSurfingDebugVariables::loadFont(path, fontSize);
 }

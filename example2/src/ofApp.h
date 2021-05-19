@@ -40,5 +40,6 @@ class ofApp : public ofBaseApp{
 
 		ofxWindowApp windowApp;
 
+		ofParameterGroup paramsApp{ "ofApp" };
 		ofxPanel gui;
 };
